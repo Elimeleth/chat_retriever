@@ -14,7 +14,6 @@ import { QdrantVectorStore } from "langchain/vectorstores/qdrant";
 
 type ConversationalRetrievalQAChainInput = {
     question: string;
-    language: string;
     chat_history: [string, string][];
 };
 
@@ -38,7 +37,6 @@ export class RunnablePassthroughChat {
         const standaloneQuestionChain = RunnableSequence.from([
             {
                 question: (input: ConversationalRetrievalQAChainInput) => input.question,
-                language: (input: ConversationalRetrievalQAChainInput) => input.language,
                 chat_history: (input: ConversationalRetrievalQAChainInput) =>
                     this.formatChatHistory(input.chat_history),
             },
@@ -50,7 +48,6 @@ export class RunnablePassthroughChat {
         const answerChain = RunnableSequence.from([
             {
                 context: this.retriever.pipe(formatDocumentsAsString),
-                language: runnable,
                 question: runnable
             },
             this.ANSWER_PROMPT,
@@ -67,7 +64,6 @@ export class RunnablePassthroughChat {
 
             const content: any = await conversationalRetrievalQAChain.invoke({
                 question,
-                language: "spanish",
                 chat_history: this.chat_history,
             })
 
