@@ -1,30 +1,22 @@
-import { PromptTemplate } from "langchain/prompts";
+import { PromptTemplate } from"langchain/prompts";
 import {
     RunnableSequence,
     RunnablePassthrough,
-} from "langchain/schema/runnable";
-import { formatDocumentsAsString } from "langchain/util/document";
-import { StringOutputParser } from "langchain/schema/output_parser";
-import { model } from "./chat_model";
-import { retriever } from "./chat_vector_store";
-import { VectorStoreRetriever } from "langchain/dist/vectorstores/base";
-import { ANSWER_TEMPLATE, CONDENSE_TEMPLATE } from "./chat_template";
-import { QdrantVectorStore } from "langchain/vectorstores/qdrant";
-
-
-type ConversationalRetrievalQAChainInput = {
-    question: string;
-    chat_history: [string, string][];
-};
+} from"langchain/schema/runnable";
+import { formatDocumentsAsString } from"langchain/util/document";
+import { StringOutputParser } from"langchain/schema/output_parser";
+import { model } from"./chat_model";
+import { retriever } from"./chat_vector_store";
+import { ANSWER_TEMPLATE, CONDENSE_TEMPLATE } from"./chat_template";
 
 export class RunnablePassthroughChat {
-    private chat_history: [string, string][] = [];
-    private retriever: VectorStoreRetriever<QdrantVectorStore> = retriever;
+    private chat_history = [];
+    private retriever = retriever;
     private CONDENSE_QUESTION_PROMPT = PromptTemplate.fromTemplate(CONDENSE_TEMPLATE)
-    private ANSWER_PROMPT: PromptTemplate = PromptTemplate.fromTemplate(ANSWER_TEMPLATE)
+    private ANSWER_PROMPT = PromptTemplate.fromTemplate(ANSWER_TEMPLATE)
     
 
-    private formatChatHistory(chatHistory: [string, string][]) {
+    private formatChatHistory(chatHistory) {
         const formattedDialogueTurns = chatHistory.map(
             (dialogueTurn) => `Human: ${dialogueTurn[0]}\nAssistant: ${dialogueTurn[1]}`
         );
@@ -36,8 +28,8 @@ export class RunnablePassthroughChat {
 
         const standaloneQuestionChain = RunnableSequence.from([
             {
-                question: (input: ConversationalRetrievalQAChainInput) => input.question,
-                chat_history: (input: ConversationalRetrievalQAChainInput) =>
+                question: (input) => input.question,
+                chat_history: (input) =>
                     this.formatChatHistory(input.chat_history),
             },
             this.CONDENSE_QUESTION_PROMPT,
@@ -58,11 +50,11 @@ export class RunnablePassthroughChat {
     }
 
 
-    async call(question: string) {
+    async call(question) {
         try {
             const conversationalRetrievalQAChain = await this.conversationalRetrievalQAChain()
 
-            const content: any = await conversationalRetrievalQAChain.invoke({
+            const content = await conversationalRetrievalQAChain.invoke({
                 question,
                 chat_history: this.chat_history,
             })

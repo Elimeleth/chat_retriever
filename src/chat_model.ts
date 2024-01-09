@@ -1,6 +1,6 @@
-import { ChatCohere, Cohere } from "@langchain/cohere";
+import { Cohere } from "@langchain/cohere"
 
-export const model = new Cohere({
+export const model =  new Cohere({
   apiKey: process.env.COHERE_API_KEY, // Default
   maxRetries: 2,
   temperature: 0,
