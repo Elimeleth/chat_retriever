@@ -1,10 +1,10 @@
-const { createBot, createProvider, createFlow } = require('@bot-whatsapp/bot')
+import { createBot, createProvider, createFlow } from '@bot-whatsapp/bot'
 
-const MockAdapter = require('@bot-whatsapp/database/mock')
-const WebHookProvider = require('./provider/lib/index.cjs')
-const intercept = require('./intercept')
-const welcome = require('./flows/welcome.flow')
-const RunnablePassthroughChat = require('../ai/lib/index.cjs')
+import MockAdapter from '@bot-whatsapp/database/mock'
+import WebHookProvider from './provider'
+import intercept from './intercept'
+import welcome from './flows/welcome.flow'
+import RunnablePassthroughChat from '../ai/chat_runnable'
 
 const flows = [welcome]
 
