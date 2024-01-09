@@ -10,13 +10,13 @@ import { retriever } from"./chat_vector_store";
 import { ANSWER_TEMPLATE, CONDENSE_TEMPLATE } from"./chat_template";
 
 export class RunnablePassthroughChat {
-    private chat_history = [];
+    private chat_history: [string, string][] = [];
     private retriever = retriever;
     private CONDENSE_QUESTION_PROMPT = PromptTemplate.fromTemplate(CONDENSE_TEMPLATE)
     private ANSWER_PROMPT = PromptTemplate.fromTemplate(ANSWER_TEMPLATE)
     
 
-    private formatChatHistory(chatHistory) {
+    private formatChatHistory(chatHistory: [string, string][]) {
         const formattedDialogueTurns = chatHistory.map(
             (dialogueTurn) => `Human: ${dialogueTurn[0]}\nAssistant: ${dialogueTurn[1]}`
         );
@@ -39,7 +39,7 @@ export class RunnablePassthroughChat {
 
         const answerChain = RunnableSequence.from([
             {
-                context: this.retriever.pipe(formatDocumentsAsString),
+                context: (await this.retriever).pipe(formatDocumentsAsString),
                 question: runnable
             },
             this.ANSWER_PROMPT,
@@ -50,7 +50,7 @@ export class RunnablePassthroughChat {
     }
 
 
-    async call(question) {
+    async call(question: string) {
         try {
             const conversationalRetrievalQAChain = await this.conversationalRetrievalQAChain()
 

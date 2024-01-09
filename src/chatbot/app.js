@@ -4,7 +4,7 @@ const MockAdapter = require('@bot-whatsapp/database/mock')
 const WebHookProvider = require('./provider/lib/index.cjs')
 const intercept = require('./intercept')
 const welcome = require('./flows/welcome.flow')
-const { RunnablePassthroughChat } = require('../chat_runnable')
+const RunnablePassthroughChat = require('../ai/lib/index.cjs')
 
 const flows = [welcome]
 

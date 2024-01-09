@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+      "target": "ES2017",                          
+      "module": "ES2022",
+      "strict": false,
+      "moduleResolution": "Node",               
+      "outDir": "out-tsc",
+      "rootDir": "./"
+    }
+    ,
+    "include": ["./src/**/*.ts"]
+  }
+  

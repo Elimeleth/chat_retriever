@@ -6,7 +6,7 @@ import { TextLoader } from "langchain/document_loaders/fs/text";
 // Create docs with a loader
 const loader = new TextLoader("src/data.txt");
 
-const qdrant_vector_store = await QdrantVectorStore.fromDocuments(
+const qdrant_vector_store = async () => await QdrantVectorStore.fromDocuments(
     await loader.load(),
     new CohereEmbeddings({
         apiKey: process.env.COHERE_API_KEY
@@ -17,4 +17,4 @@ const qdrant_vector_store = await QdrantVectorStore.fromDocuments(
     }
 )
 
-export const retriever = qdrant_vector_store.asRetriever();
+export const retriever = qdrant_vector_store().then(retriever => retriever.asRetriever());
