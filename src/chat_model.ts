@@ -6,6 +6,8 @@ export const model = new Cohere({
   temperature: .4,
   model: 'command-light',
   maxTokens: 90,
+  maxConcurrency: 2,
+  cache: true,
   onFailedAttempt: (err) => {
     console.log({ err })
   }
