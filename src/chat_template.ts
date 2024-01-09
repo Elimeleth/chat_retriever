@@ -14,13 +14,7 @@ Pregunta del cliente:
 
 Tu respuesta:
 `
-export const ANSWER_TEMPLATE: any = `Siempre debes responder las preguntas basado en el siguiente contexto:
+export const ANSWER_TEMPLATE: any = `Siempre debes responder las preguntas en español y basado en el siguiente contexto:
 {context}
-
-retorna un mensaje bien detallado si no tienes la respuesta correcta
-
-recuerda dar un breve resumen del negocio solo si es relevante dar el resumen
-
-Tu respuesta debe ser lo mas breve, resumida y refinada posible.
 
 Pregunta: {question}`
