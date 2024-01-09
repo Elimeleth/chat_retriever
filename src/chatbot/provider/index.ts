@@ -1,15 +1,15 @@
-const { ProviderClass } = require('@bot-whatsapp/bot')
-const axios = require('axios')
-const Queue = require('queue-promise')
-const WebHookServer = require('./server')
+import { ProviderClass } from '@bot-whatsapp/bot/provider'
+import axios from 'axios'
+import Queue from 'queue-promise'
+import WebHookServer from './server'
 
-class WebHookProvider extends ProviderClass {
+export default class WebHookProvider extends ProviderClass {
     bearer_token = undefined
+    hook = new WebHookServer(this.bearer_token, 9000)
 
-    constructor(args) {
+    constructor(private args: any) {
         super()
         this.bearer_token = args?.bearer_token || args?.headers?.Authorization
-        this.hook = new WebHookServer(this.bearer_token, args?.port)
         this.hook.start()
 
         const listEvents = this.busEvents()
@@ -64,9 +64,9 @@ class WebHookProvider extends ProviderClass {
     async sendMessageToApi(body) {
         try {
             
-            const response = await axios.post(`${args.url}/messages/send`, body, {
+            const response = await axios.post(`${this.args.url}/messages/send`, body, {
                 headers: {
-                    ...args?.headers
+                    ...this.args?.headers
                 },
             })
 
@@ -110,5 +110,3 @@ class WebHookProvider extends ProviderClass {
         this.sendtext(number, message)
     }
 }
-
-module.exports = WebHookProvider

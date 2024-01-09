@@ -1,22 +1,19 @@
-const { EventEmitter } = require('node:events')
-const polka = require('polka')
-const { urlencoded, json } = require('body-parser')
+import { EventEmitter } from 'node:events'
+import polka from 'polka'
+import { urlencoded, json } from 'body-parser'
 
-const Queue = require('queue-promise')
+import Queue from 'queue-promise'
 
-class WebHookServer extends EventEmitter {
-    constructor(bearer_token, port = 9000) {
+export default class WebHookServer extends EventEmitter {
+    messageQueue: any = new Queue({
+        concurrent: 1, // Procesa un mensaje a la vez
+        interval: 50, // Intervalo de 100 milisegundos entre mensajes
+        start: true, // La cola empieza a procesar tareas inmediatamente
+    })
+
+    constructor(private server: any, private port = 9000) {
         super()
-        this.port = port
-        this.bearer_token = bearer_token
-        
         this.server = this.buildHTTPServer()
-
-        this.messageQueue = new Queue({
-            concurrent: 1, // Procesa un mensaje a la vez
-            interval: 50, // Intervalo de 100 milisegundos entre mensajes
-            start: true, // La cola empieza a procesar tareas inmediatamente
-        })
     }
 
     /**
@@ -96,5 +93,3 @@ class WebHookServer extends EventEmitter {
         this.emit('ready')
     }
 }
-
-module.exports = WebHookServer

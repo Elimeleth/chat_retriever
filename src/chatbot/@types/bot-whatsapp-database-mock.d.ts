@@ -1,1 +1,1 @@
-declare module '@bot-whatsapp/provider/mock';
+declare module '@bot-whatsapp/database/mock';

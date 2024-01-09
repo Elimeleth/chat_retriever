@@ -8,4 +8,4 @@ const welcome = addKeyword('hola', { regex: true, sensitive: false })
         await flowDynamic(message)
     })
 
-module.exports = welcome
+export default welcome

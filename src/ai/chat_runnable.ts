@@ -9,7 +9,7 @@ import { model } from"./chat_model";
 import { retriever } from"./chat_vector_store";
 import { ANSWER_TEMPLATE, CONDENSE_TEMPLATE } from"./chat_template";
 
-export class RunnablePassthroughChat {
+export default class RunnablePassthroughChat {
     private chat_history: [string, string][] = [];
     private retriever = retriever;
     private CONDENSE_QUESTION_PROMPT = PromptTemplate.fromTemplate(CONDENSE_TEMPLATE)
