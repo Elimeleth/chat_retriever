@@ -12,10 +12,6 @@ import { ANSWER_TEMPLATE, CONDENSE_TEMPLATE } from "./chat_template";
 import { QdrantVectorStore } from "langchain/vectorstores/qdrant";
 
 
-const CONDENSE_QUESTION_PROMPT = PromptTemplate.fromTemplate(
-    CONDENSE_TEMPLATE
-)
-
 type ConversationalRetrievalQAChainInput = {
     question: string;
     language: string;
@@ -23,9 +19,11 @@ type ConversationalRetrievalQAChainInput = {
 };
 
 export class RunnablePassthroughChat {
-    private chat_history!: [string, string][];
+    private chat_history: [string, string][] = [];
     private retriever: VectorStoreRetriever<QdrantVectorStore> = retriever;
-    private ANSWER_PROMPT: PromptTemplate = ANSWER_TEMPLATE
+    private CONDENSE_QUESTION_PROMPT = PromptTemplate.fromTemplate(CONDENSE_TEMPLATE)
+    private ANSWER_PROMPT: PromptTemplate = PromptTemplate.fromTemplate(ANSWER_TEMPLATE)
+    
 
     private formatChatHistory(chatHistory: [string, string][]) {
         const formattedDialogueTurns = chatHistory.map(
@@ -44,7 +42,7 @@ export class RunnablePassthroughChat {
                 chat_history: (input: ConversationalRetrievalQAChainInput) =>
                     this.formatChatHistory(input.chat_history),
             },
-            CONDENSE_QUESTION_PROMPT,
+            this.CONDENSE_QUESTION_PROMPT,
             model,
             new StringOutputParser(),
         ]);
