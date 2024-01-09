@@ -4,10 +4,11 @@ const MockAdapter = require('@bot-whatsapp/database/mock')
 const WebHookProvider = require('./provider/lib/index.cjs')
 const intercept = require('./intercept')
 const welcome = require('./flows/welcome.flow')
+const { RunnablePassthroughChat } = require('../chat_runnable')
 
 const flows = [welcome]
 
-module.exports = async (runnable) => {
+const main = async () => {
     const adapterDB = new MockAdapter()
     const adapterFlow = createFlow([intercept(flows)])
     const adapterProvider = createProvider(WebHookProvider)
@@ -19,6 +20,8 @@ module.exports = async (runnable) => {
     })
 
     if (chatbot) {
-        chatbot.providerClass.runnable = runnable
+        chatbot.providerClass.runnable = new RunnablePassthroughChat()
     }
 }
+
+main()
