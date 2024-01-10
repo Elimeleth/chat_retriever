@@ -109,9 +109,22 @@ class WebHookProvider extends Bot.ProviderClass {
      */
     sendMessage = async (number, message, { options }) => {
         if (options?.media) return this.sendMedia(number, message, options.media)
-        
+
         this.sendtext(number, message)
     }
 }
 
+// # COMO ARGUMENTOS RECIBE UN PARAMETRO LLAMADO ARGS
+/**
+ * @example
+ * const args = {
+ *      url: 'http://localhost:8080', 
+ *      headers: {
+ *          'Accept': 'application/json'
+ *          'Authorization': 'Bearer ' + token
+ *      },
+ * }
+ * 
+ * Bot.createProvider(WebHookProvider, args);
+ */
 export default Bot.createProvider(WebHookProvider)
