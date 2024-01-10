@@ -1,10 +1,11 @@
 // @ts-nocheck
-import bot from '@bot-whatsapp/bot'
+import Bot from '@bot-whatsapp/bot'
 import axios from 'axios'
 import Queue from 'queue-promise'
 import WebHookServer from './server'
+import assert from 'assert'
 
-class WebHookProvider extends bot.ProviderClass {
+class WebHookProvider extends Bot.ProviderClass {
     private bearer_token = undefined
     private hook = new WebHookServer(this.bearer_token, 9000)
 
@@ -64,7 +65,8 @@ class WebHookProvider extends bot.ProviderClass {
      */
     async sendMessageToApi(body) {
         try {
-            
+            console.log('Sending message to API: ', body)
+            if (!this.bearer_token || !this.args) throw new Error("bearer_token && args is required")
             const response = await axios.post(`${this.args.url}/messages/send`, body, {
                 headers: {
                     ...this.args?.headers

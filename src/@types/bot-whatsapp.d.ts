@@ -44,6 +44,7 @@ declare module "@bot-whatsapp/bot" {
       gotoFlow: (flow: any) => Promise<void>;
       endFlow: (message?: string) => void;
       fallBack: (message?: string) => void;
+      provider: any;
       state: BotState;
       extensions: any;
     };
@@ -73,7 +74,7 @@ declare module "@bot-whatsapp/bot" {
   
   
     type ICreateFlowArg = {
-      flows: any;
+      flow: any;
       database: any;
       provider: any
     }
@@ -85,7 +86,7 @@ declare module "@bot-whatsapp/bot" {
      * @returns Instancia del bot.
      */
     function createBot(
-      { flows, database, provider }: ICreateFlowArg,
+      { flow, database, provider }: ICreateFlowArg,
       args?: any
     ): Promise<any>;
   

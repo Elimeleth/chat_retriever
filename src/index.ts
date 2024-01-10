@@ -4,11 +4,11 @@ import Bot from '@bot-whatsapp/bot'
 import RunnablePassthroughChat from './ai/chat_runnable'
 import database from './chatbot/database'
 import provider from './chatbot/provider'
-import flows from "./chatbot/flows"
+import flow from "./chatbot/flows"
 
 const main = async () => {
     const chatbot = await Bot.createBot({
-        flows,
+        flow,
         provider,
         database,
     })
