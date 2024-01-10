@@ -24,10 +24,7 @@ export default class WebHookServer extends EventEmitter {
      */
     incomingMsg = async (req, res) => {
         const { body } = req
-        // if (body?.payload && body.payload.status !== 'sent') {
-        //     res.end('OK')
-        //     return
-        // }
+        
         const messages = [body.payload]
 
         if (!messages) {
@@ -37,15 +34,15 @@ export default class WebHookServer extends EventEmitter {
         }
 
         messages.forEach(async (message) => {
-            const pushName = message.name
+            const pushName = message.name || undefined
             let responseObj
 
             responseObj = {
-                type: 'text', //message.type,
+                type: message.type || 'text',
                 from: message.from,
                 to: message.to,
                 body: message.text,
-                pushName: 'mari',
+                pushName: pushName,
                 messageTimestamp: Date.now(),
                 timestamp: Date.now()
             }

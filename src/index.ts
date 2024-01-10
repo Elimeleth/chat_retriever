@@ -14,6 +14,7 @@ const main = async () => {
     })
 
     if (chatbot) {
+        // pasamos nuestro runnable al provider para tenerlo en nuestro interceptor
         chatbot.providerClass.runnable = new RunnablePassthroughChat()
     }
 }

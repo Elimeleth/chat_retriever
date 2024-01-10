@@ -1,13 +1,17 @@
 import bot from "@bot-whatsapp/bot"
 
 /**
- * INTERCEPTAMOS TODAS LAS INTENCIONES EN UN SOLO LUGAR Y ENVIAMOS EL FLOW
- * @param {*} flows 
- * @returns 
+  La modalidad de interceptar todos los flows en un solo lugar nos da la posibilidad de ser creativos
+  y poder editar el state de un usuario y pueda viajar
+  esto da incluso para colocar algun otro servicio o middleware
+
+  ESTE INTECEPTOR FUNCIONA COMO HIBRIDO, me explico: 
+
+  tiene un flow que se activa con => hola pero de no ser lo que el usuario escribio alli actua la AI
  */
 const intercept = (flows) => {
     const flow = bot.addKeyword(`/.*/gim`, { regex: true, sensitive: false })
-        .addAction(async (ctx, { gotoFlow, endFlow, flowDynamic, provider }) => {
+        .addAction(async (ctx, { gotoFlow, endFlow, provider }) => {
             try {
                 console.log('Running flow')
                 const flow = flows.find(f => !!(//? SOLO FUNCIONA CON EXPRESIONES REGULARES
@@ -20,6 +24,7 @@ const intercept = (flows) => {
                     console.log('flow founded: ', flow)
                     await gotoFlow(flow)
                 }else {
+                    // de no encontrar el flujo procedemos a usar nuestro RAG
                     console.log('flow not founded - Running AI ')
                     await endFlow(await provider.runnable.call(ctx.body))
                 }

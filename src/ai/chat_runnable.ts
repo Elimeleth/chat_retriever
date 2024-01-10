@@ -1,3 +1,11 @@
+/*
+Langchain: https://js.langchain.com/docs/expression_language/how_to/routing#using-a-custom-function
+
+Un runnable es un algoritmo por el cual podemos tener control de nuestro RAG
+con algo de logica un poco avancada podriamos controlar los callbacks que usa langchain por debajo
+y con ello tener aún más control sobre nuestro chatbot
+*/
+
 import { PromptTemplate } from"@langchain/core/prompts";
 import {
     RunnableSequence,
@@ -10,11 +18,15 @@ import { model } from"./chat_model";
 import { retriever } from"./chat_vector_store";
 import { ANSWER_TEMPLATE, CONDENSE_TEMPLATE } from"./chat_template";
 
+type conversational = {
+    question: string
+    chat_history: [string, string][]
+}
 export default class RunnablePassthroughChat {
     private chat_history: [string, string][] = [];
     private retriever = retriever;
-    private CONDENSE_QUESTION_PROMPT = PromptTemplate.fromTemplate(CONDENSE_TEMPLATE)
-    private ANSWER_PROMPT = PromptTemplate.fromTemplate(ANSWER_TEMPLATE)
+    private CONDENSE_QUESTION_PROMPT = PromptTemplate.fromTemplate(CONDENSE_TEMPLATE) // El primer PROMPT indica como actuar en consecuencia
+    private ANSWER_PROMPT = PromptTemplate.fromTemplate(ANSWER_TEMPLATE) // El segundo PROMPT indica como responder
     
 
     private formatChatHistory(chatHistory: [string, string][]) {
@@ -25,17 +37,18 @@ export default class RunnablePassthroughChat {
     };
 
     private async conversationalRetrievalQAChain() {
-        const runnable = new RunnablePassthrough()
+        const runnable = new RunnablePassthrough() // Construimos nuestro Runnable
 
         const standaloneQuestionChain = RunnableSequence.from([
             {
-                question: (input) => input.question,
-                chat_history: (input) =>
-                    this.formatChatHistory(input.chat_history),
+                question: (input: conversational) => input.question,
+                chat_history: (input: conversational) =>
+                    // esto con la finalidad de que nuestro RAG tenga conocimiento del flujo
+                    this.formatChatHistory(input.chat_history) // convertimos nuestro historial [pregunta, respuesta][] a un Human: ...\nAssistant: ...,
             },
             this.CONDENSE_QUESTION_PROMPT,
             model,
-            new StringOutputParser(),
+            new StringOutputParser() // aplaca la salida a string,
         ]);
 
         const answerChain = RunnableSequence.from([
@@ -60,8 +73,7 @@ export default class RunnablePassthroughChat {
                 chat_history: this.chat_history,
             })
 
-            console.log({ content })
-            // this.chat_history.push([question, content])
+            this.chat_history.push([question, content])
 
             return content
         } catch (error) {

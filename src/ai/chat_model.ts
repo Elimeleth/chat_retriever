@@ -1,3 +1,9 @@
+/*
+Cabe destacar que use cohere por su free tier no comercial
+
+pero se puede usar cloudflare woker con una AI pequeña corriendo como serverless
+*/
+
 import { Cohere } from "@langchain/cohere"
 
 export const model =  new Cohere({

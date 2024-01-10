@@ -1,9 +1,12 @@
+/*
+    Debes editar tu propia logica en la funcion sendMessageToApi para el envio de la data a tu API
+*/
+
 // @ts-nocheck
 import Bot from '@bot-whatsapp/bot'
 import axios from 'axios'
 import Queue from 'queue-promise'
 import WebHookServer from './server'
-import assert from 'assert'
 
 class WebHookProvider extends Bot.ProviderClass {
     private bearer_token = undefined
@@ -67,7 +70,7 @@ class WebHookProvider extends Bot.ProviderClass {
         try {
             console.log('Sending message to API: ', body)
             if (!this.bearer_token || !this.args) throw new Error("bearer_token && args is required")
-            const response = await axios.post(`${this.args.url}/messages/send`, body, {
+            const response = await axios.post(`${this.args.url}/foo`, body, {
                 headers: {
                     ...this.args?.headers
                 },
