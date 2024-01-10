@@ -1,4 +1,4 @@
-const { addKeyword } = require("@bot-whatsapp/bot")
+import bot from "@bot-whatsapp/bot"
 
 /**
  * INTERCEPTAMOS TODAS LAS INTENCIONES EN UN SOLO LUGAR Y ENVIAMOS EL FLOW
@@ -6,10 +6,10 @@ const { addKeyword } = require("@bot-whatsapp/bot")
  * @returns 
  */
 const intercept = (flows) => {
-    const flow = addKeyword(`/.*/gim`, { regex: true, sensitive: false })
-        .addAction(async (ctx, { gotoFlow, endFlow, flowDynamic, provider }) => {
+    const flow = bot.addKeyword(`/.*/gim`, { regex: true, sensitive: false })
+        .addAction(async (ctx, { gotoFlow, endFlow, flowDynamic }) => {
             try {
-                console.log({ provider })
+                
                 const flow = flows.find(f => !!(//? SOLO FUNCIONA CON EXPRESIONES REGULARES
                     typeof f.ctx.keyword === 'string' &&
                     new RegExp(String(f.ctx.keyword).toLowerCase().replace(/(\/|gim)/g, '')).test(ctx.body)
@@ -30,4 +30,4 @@ const intercept = (flows) => {
     return flow
 }
 
-module.exports = intercept
+export default intercept;

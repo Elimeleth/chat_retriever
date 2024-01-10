@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events'
 import polka from 'polka'
-import { urlencoded, json } from 'body-parser'
+import bodyParser from 'body-parser'
 
 import Queue from 'queue-promise'
 
@@ -73,8 +73,8 @@ export default class WebHookServer extends EventEmitter {
      */
     buildHTTPServer() {
         return polka()
-            .use(urlencoded({ extended: true }))
-            .use(json())
+            .use(bodyParser.urlencoded({ extended: true }))
+            .use(bodyParser.json())
             .get('/', this.emptyCtrl)
             .get('/webhook', this.emptyCtrl)
             .post('/webhook', this.incomingMsg)

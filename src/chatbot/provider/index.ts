@@ -1,11 +1,18 @@
-import { ProviderClass } from '@bot-whatsapp/bot/provider'
+// @ts-nocheck
+import bot from '@bot-whatsapp/bot'
 import axios from 'axios'
 import Queue from 'queue-promise'
 import WebHookServer from './server'
 
-export default class WebHookProvider extends ProviderClass {
-    bearer_token = undefined
-    hook = new WebHookServer(this.bearer_token, 9000)
+class WebHookProvider extends bot.ProviderClass {
+    private bearer_token = undefined
+    private hook = new WebHookServer(this.bearer_token, 9000)
+
+    private queue = new Queue({
+        concurrent: 1, // Cantidad de tareas que se ejecutarán en paralelo
+        interval: 100, // Intervalo entre tareas
+        start: true, // Iniciar la cola automáticamente
+    })
 
     constructor(private args: any) {
         super()
@@ -17,12 +24,6 @@ export default class WebHookProvider extends ProviderClass {
         for (const { event, func } of listEvents) {
             this.hook.on(event, func)
         }
-
-        this.queue = new Queue({
-            concurrent: 1, // Cantidad de tareas que se ejecutarán en paralelo
-            interval: 100, // Intervalo entre tareas
-            start: true, // Iniciar la cola automáticamente
-        })
     }
 
     /**
@@ -110,3 +111,5 @@ export default class WebHookProvider extends ProviderClass {
         this.sendtext(number, message)
     }
 }
+
+export default Bot.createProvider(WebHookProvider)

@@ -1,5 +1,5 @@
 import { CohereEmbeddings } from "@langchain/cohere"
-import { QdrantVectorStore } from "langchain/vectorstores/qdrant"
+import { QdrantVectorStore } from "@langchain/community/vectorstores/qdrant"
 
 import { TextLoader } from "langchain/document_loaders/fs/text";
 

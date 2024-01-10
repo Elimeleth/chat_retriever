@@ -1,7 +1,10 @@
 {
+  "type": "module",
+  "main": "index.js",
   "scripts": {
-    "build:provider": "rollup --config src/chatbot/provider/rollup.config.js",
-    "build:ai": "rimraf dist && tsc && rollup -c src/ai/rollup.config.js"
+    "dev": "node ./node_modules/tsx/dist/cli.cjs ./src/index.ts",
+    "build": "node ./node_modules/rollup/dist/bin/rollup -c",
+    "start": "node dist/index.js"
   },
   "dependencies": {
     "@bot-whatsapp/bot": "latest",
@@ -11,29 +14,28 @@
     "@bot-whatsapp/provider": "latest",
     "@langchain/cohere": "^0.0.2",
     "@langchain/community": "^0.0.15",
+    "@langchain/core": "^0.1.12",
     "@qdrant/js-client-rest": "^1.7.0",
     "@whiskeysockets/baileys": "6.5.0",
+    "axios": "^1.6.5",
     "body-parser": "^1.20.2",
     "cache-manager": "5.2.4",
+    "dotenv": "^16.3.1",
     "langchain": "^0.1.1",
+    "polka": "^0.5.2",
     "queue-promise": "^2.2.1",
     "wa-sticker-formatter": "4.4.4"
   },
   "devDependencies": {
-    "@open-wc/building-rollup": "^3.0.2",
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-replace": "^5.0.5",
-    "@rollup/plugin-strip": "^3.0.4",
+    "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
-    "deepmerge": "^4.3.1",
-    "eslint": "^8.52.0",
-    "eslint-plugin-bot-whatsapp": "latest",
-    "rimraf": "^5.0.5",
-    "rollup": "^4.9.4",
-    "rollup-plugin-cleanup": "^3.2.1",
-    "rollup-plugin-copy": "^3.5.0",
-    "typescript": "^5.3.3"
+    "@types/body-parser": "^1.19.5",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.6",
+    "@types/polka": "^0.5.7",
+    "rollup": "^4.9.2",
+    "rollup-plugin-typescript2": "^0.35.0",
+    "tsx": "^3.14.0"
   }
 }

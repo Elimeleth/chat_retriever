@@ -73,7 +73,7 @@ declare module "@bot-whatsapp/bot" {
   
   
     type ICreateFlowArg = {
-      flow: any;
+      flows: any;
       database: any;
       provider: any
     }
@@ -85,7 +85,7 @@ declare module "@bot-whatsapp/bot" {
      * @returns Instancia del bot.
      */
     function createBot(
-      { flow, database, provider }: ICreateFlowArg,
+      { flows, database, provider }: ICreateFlowArg,
       args?: any
     ): Promise<any>;
   
@@ -122,11 +122,14 @@ declare module "@bot-whatsapp/bot" {
       ACTION: string;
       WELCOME: string;
     };
+
+    ProviderClass: any
   
     // Exportaciones del módulo
     export {
       BotContext,
       BotMethods,
+      ProviderClass,
       createBot,
       createFlow,
       createProvider,

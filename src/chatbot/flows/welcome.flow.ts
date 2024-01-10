@@ -1,6 +1,6 @@
-const { addKeyword } = require('@bot-whatsapp/bot')
+import bot from '@bot-whatsapp/bot'
 
-const welcome = addKeyword('hola', { regex: true, sensitive: false })
+const welcome = bot.addKeyword('hola', { regex: true, sensitive: false })
     .addAction(async (ctx, { flowDynamic, state }) => {
         const message = 'hola!'
 

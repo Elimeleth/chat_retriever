@@ -1,10 +1,11 @@
-import { PromptTemplate } from"langchain/prompts";
+import { PromptTemplate } from"@langchain/core/prompts";
 import {
     RunnableSequence,
     RunnablePassthrough,
-} from"langchain/schema/runnable";
+} from"@langchain/core/runnables";
+import { StringOutputParser } from"@langchain/core/output_parsers";
 import { formatDocumentsAsString } from"langchain/util/document";
-import { StringOutputParser } from"langchain/schema/output_parser";
+
 import { model } from"./chat_model";
 import { retriever } from"./chat_vector_store";
 import { ANSWER_TEMPLATE, CONDENSE_TEMPLATE } from"./chat_template";
