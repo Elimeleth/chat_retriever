@@ -1,5 +1,3 @@
-import "dotenv/config"
-
 /*
 Langchain: https://js.langchain.com/docs/expression_language/how_to/routing#using-a-custom-function
 
