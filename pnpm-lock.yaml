@@ -20,6 +20,9 @@ dependencies:
   '@bot-whatsapp/provider':
     specifier: latest
     version: 0.1.35
+  '@langchain/cloudflare':
+    specifier: ^0.0.1
+    version: 0.0.1
   '@langchain/cohere':
     specifier: ^0.0.2
     version: 0.0.2
@@ -735,6 +738,10 @@ packages:
       - debug
     dev: false
 
+  /@cloudflare/ai@1.0.47:
+    resolution: {integrity: sha512-HRCIrSPrC3mXtIhbWQsSZAQxKHeiQxsjLPy0LHPrkZMzIFevJREINSNEhEccU/kDREkyPlzU5vV4++Yldbqqsg==}
+    dev: false
+
   /@esbuild/android-arm64@0.18.20:
     resolution: {integrity: sha512-Nz4rJcchGDtENV0eMKUNa6L12zz2zBDXuhj/Vjh18zGqB44Bi7MBMSXjgunJgjRhCmKOjnPuZp4Mb6OKqtMHLQ==}
     engines: {node: '>=12'}
@@ -1065,6 +1072,15 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
+
+  /@langchain/cloudflare@0.0.1:
+    resolution: {integrity: sha512-mwWnbd/NWfYxt4XVQvx/6DeHTY0KAufIaV2ceVe8D5euENolWjUIxzTJRbpxeAKx+noeO/kEwT0I2Zq5603u5g==}
+    engines: {node: '>=18'}
+    dependencies:
+      '@cloudflare/ai': 1.0.47
+      '@langchain/core': 0.1.12
+      uuid: 9.0.1
+    dev: false
 
   /@langchain/cohere@0.0.2:
     resolution: {integrity: sha512-xLSBX5t4JI6pMQkWRcngCGa3GqInd4F7zlWQ8EJFCqFp9ZBPgi6gIK9Q8xkbM9MttCpnTe4rLuNa2PbQ5TFldA==}

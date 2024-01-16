@@ -1,7 +1,7 @@
 import "dotenv/config"
 import Bot from '@bot-whatsapp/bot'
 
-import RunnablePassthroughChat from './ai/chat_runnable'
+import RunnablePassthroughChat from './ai'
 import database from './chatbot/database'
 import provider from './chatbot/provider'
 import flow from "./chatbot/flows"
