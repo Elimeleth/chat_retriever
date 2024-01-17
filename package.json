@@ -16,6 +16,7 @@
     "@langchain/cohere": "^0.0.2",
     "@langchain/community": "^0.0.15",
     "@langchain/core": "^0.1.12",
+    "@polka/send": "1.0.0-next.6",
     "@qdrant/js-client-rest": "^1.7.0",
     "@whiskeysockets/baileys": "6.5.0",
     "axios": "^1.6.5",

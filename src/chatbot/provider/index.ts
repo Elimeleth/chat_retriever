@@ -3,10 +3,24 @@
 */
 
 // @ts-nocheck
-import Bot from '@bot-whatsapp/bot'
+import Bot from "@bot-whatsapp/bot"
 import axios from 'axios'
 import Queue from 'queue-promise'
 import WebHookServer from './server'
+import { IncomingMessage, ServerResponse } from "http"
+
+
+export type Args = {
+    bearer_token: string;
+    url: string;
+    headers: {
+        [key: string]: string
+    };
+    attachWebhook: {
+        path: string, 
+        controller: (req: IncomingMessage, res: ServerResponse) => Promise<ServerResponse & { responses: any[] }>
+    }
+}
 
 class WebHookProvider extends Bot.ProviderClass {
     private bearer_token = undefined
@@ -18,9 +32,15 @@ class WebHookProvider extends Bot.ProviderClass {
         start: true, // Iniciar la cola automáticamente
     })
 
-    constructor(private args: any) {
+    constructor(private args: Args) {
         super()
         this.bearer_token = args?.bearer_token || args?.headers?.Authorization
+        
+        if (args.attachWebhook) {
+            const { path, controller } = args.attachWebhook
+            this.hook.createWebhook(path, controller)
+        }
+
         this.hook.start()
 
         const listEvents = this.busEvents()
@@ -28,6 +48,8 @@ class WebHookProvider extends Bot.ProviderClass {
         for (const { event, func } of listEvents) {
             this.hook.on(event, func)
         }
+
+        
     }
 
     /**
@@ -35,7 +57,7 @@ class WebHookProvider extends Bot.ProviderClass {
      * para tener un standar de eventos
      * @returns
      */
-    busEvents = () => [
+    private busEvents = () => [
         {
             event: 'auth_failure',
             func: (payload) => this.emit('error', payload),
@@ -56,7 +78,7 @@ class WebHookProvider extends Bot.ProviderClass {
      * @param {Object} body - The body of the message.
      * @return {Promise} A Promise that resolves when the message is sent.
      */
-    sendMessageApi(body) {
+    private sendMessageApi(body) {
         return this.queue.add(() => this.sendMessageToApi(body))
     }
 
@@ -66,42 +88,22 @@ class WebHookProvider extends Bot.ProviderClass {
      * @param {Object} body - The body of the message.
      * @return {Object} The response data from the API.
      */
-    async sendMessageToApi(body) {
+    private async sendMessageToApi(body) {
         try {
             console.log('Sending message to API: ', body)
             if (!this.bearer_token || !this.args) throw new Error("bearer_token && args is required")
-            const response = await axios.post(`${this.args.url}/foo`, body, {
-                headers: {
-                    ...this.args?.headers
-                },
-            })
+            // const response = await axios.post(`${this.args.url}/foo`, body, {
+            //     headers: {
+            //         ...this.args?.headers
+            //     },
+            // })
 
-            return response.data
+            // return response.data
         } catch (error) {
             console.error(error)
         }
     }
 
-    sendtext = async (number, message) => {
-        const body = {
-            from: "whatsapp",
-            to: `+${number}`,
-            type: 'text',
-            content: {
-                text: message,
-            },
-        }
-        return this.sendMessageApi(body)
-    }
-    /**
-     * @alpha
-     * @param {string} number
-     * @param {string} message
-     * @example await sendMessage('+XXXXXXXXXXX', 'https://dominio.com/imagen.jpg' | 'img/imagen.jpg')
-     */
-
-    sendMedia = async (number, text = '', options) => {
-    }
 
     /**
      *
@@ -113,21 +115,16 @@ class WebHookProvider extends Bot.ProviderClass {
     sendMessage = async (number, message, { options }) => {
         if (options?.media) return this.sendMedia(number, message, options.media)
 
-        this.sendtext(number, message)
+        const body = {
+            from: "whatsapp",
+            to: `+${number}`,
+            type: 'text',
+            content: {
+                text: message,
+            },
+        }
+        return this.sendMessageApi(body)
     }
 }
 
-// # COMO ARGUMENTOS RECIBE UN PARAMETRO LLAMADO ARGS
-/**
- * @example
- * const args = {
- *      url: 'http://localhost:8080', 
- *      headers: {
- *          'Accept': 'application/json'
- *          'Authorization': 'Bearer ' + token
- *      },
- * }
- * 
- * Bot.createProvider(WebHookProvider, args);
- */
-export default Bot.createProvider(WebHookProvider)
+export default WebHookProvider

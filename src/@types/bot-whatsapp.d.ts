@@ -98,10 +98,10 @@ declare module "@bot-whatsapp/bot" {
      * @param args - Argumentos adicionales.
      * @returns Instancia del proveedor.
      */
-    function createProvider(
-      providerClass?: new (args: any) => any,
-      args?: any
-    ): any;
+    function createProvider<C, T>(
+      providerClass?: new (args: any) => C,
+      args?: T
+    ): C;
   
     /**
      * Agrega una palabra clave al bot.

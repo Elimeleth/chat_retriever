@@ -5,87 +5,69 @@ import bodyParser from 'body-parser'
 import Queue from 'queue-promise'
 
 export default class WebHookServer extends EventEmitter {
+    server!: polka.Polka
+    
     messageQueue: any = new Queue({
         concurrent: 1, // Procesa un mensaje a la vez
         interval: 50, // Intervalo de 100 milisegundos entre mensajes
         start: true, // La cola empieza a procesar tareas inmediatamente
     })
 
-    constructor(private server: any, private port = 9000) {
+
+    constructor(private port = 9000) {
         super()
         this.server = this.buildHTTPServer()
     }
 
-    /**
-     * Mensaje entrante
-     * emit: 'message'
-     * @param {*} req
-     * @param {*} res
-     */
-    incomingMsg = async (req, res) => {
-        const { body } = req
-        
-        const messages = [body.payload]
-
-        if (!messages) {
-            res.statusCode = 200
-            res.end('empty endpoint')
-            return
-        }
-
-        messages.forEach(async (message) => {
-            const pushName = message.name || undefined
-            let responseObj
-
-            responseObj = {
-                type: message.type || 'text',
-                from: message.from,
-                to: message.to,
-                body: message.text,
-                pushName: pushName,
-                messageTimestamp: Date.now(),
-                timestamp: Date.now()
-            }
-
-
-            if (responseObj) {
-                this.messageQueue.enqueue(() => this.processMessage(responseObj))
-            }
-        })
-
-        res.statusCode = 200
-        res.end('Messages enqueued')
-    }
-
-    processMessage = (message) => {
+    private processMessage = async (message) => {
         this.emit('message', message)
     }
 
-    emptyCtrl = (_, res) => {
-        res.end('')
+    private handleQueue (messages) {
+        for (const message of messages) {
+            this.messageQueue.enqueue(() => this.processMessage(message))
+        }
+    }
+
+    createWebhook(path: string, controller: (req, res) => Promise<Response>) {
+        this.server.use(path, (req, res, next) => {
+            try {
+                Promise.all([
+                    controller(req, res),
+                    // @ts-ignore
+                    this.handleQueue(res?.responses)
+                ])
+                next()
+            } catch (error) {
+                next(error?.message)
+            }
+        })
+        this.server.post(path, async (req, res) => {
+            res.statusCode = 201
+            res.end('success!')
+        })
     }
 
     /**
      * Contruir HTTP Server
      */
-    buildHTTPServer() {
+    private buildHTTPServer() {
         return polka()
             .use(bodyParser.urlencoded({ extended: true }))
             .use(bodyParser.json())
-            .get('/', this.emptyCtrl)
-            .get('/webhook', this.emptyCtrl)
-            .post('/webhook', this.incomingMsg)
-            .all('*', (_, res) => res.status(404))
-    }
+            .get('/', (_, res) => res.end('Hello, friend'))
+            .all('*', (_, res) => {
+                res.statusCode = 404
+                res.end('')
+            })
+    }    
 
     /**
      * Iniciar el servidor HTTP
      */
     start() {
         this.server.listen(this.port, () => {
-            console.log(`[edge]: Agregar esta url "Webhook"`)
-            console.log(`[edge]: POST http://localhost:${this.port}/webhook`)
-            console.log(`[edge]: Más información en la documentación`)
+            console.log(`Server listening on port: http://localhost:${this.port}`);
         })
         this.emit('ready')
     }

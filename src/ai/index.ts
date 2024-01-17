@@ -86,12 +86,3 @@ export default class RunnablePassthroughChat {
         }
     }
 }
-
-// const main = async () => {
-//     const runnable = new RunnablePassthroughChat()
-//     const content = await runnable.call('Que color son los new balance y su precio mas barato?')
-
-//     console.log(content)
-// }
-
-// await main()

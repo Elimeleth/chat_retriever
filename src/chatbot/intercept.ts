@@ -1,4 +1,4 @@
-import bot from "@bot-whatsapp/bot"
+import Bot from "@bot-whatsapp/bot"
 
 /**
   La modalidad de interceptar todos los flows en un solo lugar nos da la posibilidad de ser creativos
@@ -10,7 +10,7 @@ import bot from "@bot-whatsapp/bot"
   tiene un flow que se activa con => hola pero de no ser lo que el usuario escribio alli actua la AI
  */
 const intercept = (flows) => {
-    const flow = bot.addKeyword(`/.*/gim`, { regex: true, sensitive: false })
+    const flow = Bot.addKeyword(`/.*/gim`, { regex: true, sensitive: false })
         .addAction(async (ctx, { gotoFlow, endFlow, provider }) => {
             try {
                 console.log('Running flow')

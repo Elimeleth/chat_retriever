@@ -1,6 +1,6 @@
 import { formatDocumentsAsString } from "langchain/util/document";
 import { vectorStore } from "../ai/retriever"
-import embeddings from "src/ai/embedding";
+import embeddings from "../ai/embedding";
 
 /*
 
