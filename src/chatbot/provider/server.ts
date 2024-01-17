@@ -24,6 +24,8 @@ export default class WebHookServer extends EventEmitter {
     }
 
     private handleQueue (messages) {
+        if (!messages) return
+        messages = Array.isArray(messages) ? messages : [messages]
         for (const message of messages) {
             this.messageQueue.enqueue(() => this.processMessage(message))
         }
