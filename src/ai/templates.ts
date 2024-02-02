@@ -18,5 +18,6 @@ Standalone question:`
 export const ANSWER_TEMPLATE = `Answer the question based only on the following context:
 {context}
 just answer into spanish language and dont explain why your response
+return a key named code which is an array's Object and into of code put example's code
 
 Question: {question}`

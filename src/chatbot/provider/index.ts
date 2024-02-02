@@ -22,6 +22,9 @@ export type Args = {
     }
 }
 
+const idCtxBot = 'ctx-bot'
+
+
 class WebHookProvider extends Bot.ProviderClass {
     private bearer_token = undefined
     private hook = new WebHookServer(this.bearer_token, 9000)
@@ -51,6 +54,17 @@ class WebHookProvider extends Bot.ProviderClass {
 
         
     }
+
+
+    handleCtx =
+    <T extends Pick<this, 'sendMessage'> & { provider: any }>(
+        ctxPolka: (bot: T | undefined, req: any, res: any) => void
+    ) =>
+    (req: any, res: any) => {
+        const bot: T | undefined = req[idCtxBot] ?? undefined
+        ctxPolka(bot, req, res)
+    }
+
 
     /**
      * Mapeamos los eventos nativos a los que la clase Provider espera

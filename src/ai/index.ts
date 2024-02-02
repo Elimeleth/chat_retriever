@@ -5,7 +5,7 @@ Un runnable es un algoritmo por el cual podemos tener control de nuestro RAG
 con algo de logica un poco avancada podriamos controlar los callbacks que usa langchain por debajo
 y con ello tener aún más control sobre nuestro chatbot
 */
-
+import 'dotenv/config'
 import { PromptTemplate }  from "@langchain/core/prompts";
 import {
     RunnableSequence,
@@ -17,7 +17,8 @@ import { formatDocumentsAsString }  from "langchain/util/document";
 
 import { CONDENSE_TEMPLATE, ANSWER_TEMPLATE }  from "./templates";
 
-import { retriever }  from "./retriever";
+// import { retriever }  from "./retriever";
+import retriever from "../ai/data"
 
 import model from "./model";
 
@@ -86,3 +87,6 @@ export default class RunnablePassthroughChat {
         }
     }
 }
+
+const runnable = new RunnablePassthroughChat()
+console.log(await runnable.call('Realiza un simple flow que se dispare cuando un usuario escriba hola'))
